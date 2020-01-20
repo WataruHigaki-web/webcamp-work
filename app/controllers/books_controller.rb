@@ -9,17 +9,30 @@ class BooksController < ApplicationController
   end
   def create
   	book = Book.new(book_params)
-  	book.save
+  	if book.save
   	redirect_to book_path(book.id)
+  	flash[:notice]='Book was successfully created'
+  else
+  	@books = Book.all
+  	@book = Book.new
+  	flash[:notice] = "can't be blank"
+  	render :index
   end
-
+  end
   def edit
   	@book = Book.find(params[:id])
   end
   def update
   	book = Book.find(params[:id])
-  	book.update(book_params)
+  	if book.update(book_params)
   	redirect_to book_path(book)
+  	flash[:notice]='Book was successfully updated'
+  else
+  	@books = Book.all
+  	@book = Book.find(book.id)
+  	flash[:notice] = "can't be blank"
+    render :edit
+  end
   end
   def home
   	@book = Book.new
